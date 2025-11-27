@@ -44,6 +44,7 @@ import type { AppUsage } from "@/lib/usage";
 import { convertToUIMessages, generateUUID } from "@/lib/utils";
 import { generateTitleFromUserMessage } from "../../actions";
 import { type PostRequestBody, postRequestBodySchema } from "./schema";
+import { gateway } from '@ai-sdk/gateway';
 
 export const maxDuration = 60;
 
@@ -179,8 +180,9 @@ export async function POST(request: Request) {
 
     const stream = createUIMessageStream({
       execute: ({ writer: dataStream }) => {
+        const model = myProvider.languageModel(selectedChatModel);
         const result = streamText({
-          model: myProvider.languageModel(selectedChatModel),
+          model: model.modelId,
           system: systemPrompt({ selectedChatModel, requestHints }),
           messages: convertToModelMessages(uiMessages),
           stopWhen: stepCountIs(5),
