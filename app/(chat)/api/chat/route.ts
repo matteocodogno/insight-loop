@@ -176,10 +176,10 @@ export async function POST(request: Request) {
             selectedChatModel === "chat-model-reasoning"
               ? []
               : [
-                  "getWeather",
+                  // "getWeather",
                   "createDocument",
-                  "updateDocument",
-                  "requestSuggestions",
+                  // "updateDocument",
+                  // "requestSuggestions",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
           tools: {

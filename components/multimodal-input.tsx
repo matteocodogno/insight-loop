@@ -43,7 +43,7 @@ import {
   StopIcon,
 } from "./icons";
 import { PreviewAttachment } from "./preview-attachment";
-import { SuggestedActions } from "./suggested-actions";
+import { SuggestedActions, SuggestionKind } from "./suggested-actions";
 import { Button } from "./ui/button";
 import type { VisibilityType } from "./visibility-selector";
 
@@ -82,6 +82,7 @@ function PureMultimodalInput({
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
+  const [ suggestionKind, setSuggestionKind ] = useState<SuggestionKind>("productIdeas");
 
   const adjustHeight = useCallback(() => {
     if (textareaRef.current) {
@@ -286,18 +287,23 @@ function PureMultimodalInput({
     return () => textarea.removeEventListener('paste', handlePaste);
   }, [handlePaste]);
 
+  useEffect(() => {
+    const x = messages.length === 0 && attachments.length === 0 && uploadQueue.length === 0
+      ? "productIdeas"
+      : "generateDocuments";
+    setSuggestionKind(x);
+  }, [messages, attachments, uploadQueue]);
+
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
-      {messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
-          <SuggestedActions
-            chatId={chatId}
-            selectedVisibilityType={selectedVisibilityType}
-            sendMessage={sendMessage}
-          />
-        )}
-
+      {(messages.length === 0 || messages.length >= 14) && (
+        <SuggestedActions
+          chatId={chatId}
+          selectedVisibilityType={selectedVisibilityType}
+          sendMessage={sendMessage}
+          kind={suggestionKind}
+        />
+      )}
       <input
         className="-top-4 -left-4 pointer-events-none fixed size-0.5 opacity-0"
         multiple
