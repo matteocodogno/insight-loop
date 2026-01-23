@@ -30,7 +30,7 @@ export const myProvider = isTestEnvironment
           model: gateway.languageModel("anthropic/claude-opus-4"),
           middleware: extractReasoningMiddleware({ tagName: "think" }),
         }),
-        "title-model": gateway.languageModel("xai/grok-2-1212"),
-        "artifact-model": gateway.languageModel("xai/grok-2-1212"),
+        "title-model": gateway.languageModel("anthropic/claude-sonnet-4.5"),
+        "artifact-model": gateway.languageModel("anthropic/claude-sonnet-4.5"),
       },
     });
